@@ -1819,6 +1819,7 @@ class TestEmailValidation:
         driver.find_element(*FormLocators.Male_Radi_Button_Filed).click()
         selector = Select(driver.find_element(*FormLocators.Hobbies_Field))
         selector.select_by_visible_text("Running")
+        selector.select_by_visible_text("Reading")
         selector = Select(driver.find_element(*FormLocators.Department_Field))
         selector.select_by_visible_text("Department of Agriculture")
         driver.find_element(*FormLocators.Username_Field).send_keys("abdo1234")
