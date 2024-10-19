@@ -16,7 +16,9 @@ ERROR_LOG_FILE = "error_log.csv"  # File where error logs will be saved
 
 
 # Function to log errors to a CSV file for tracking
-def log_error_to_csv(error_message, class_name, function_name, input_data, expected_result, platform):
+def log_error_to_csv(
+    error_message, class_name, function_name, input_data, expected_result, platform
+):
     file_path = ERROR_LOG_FILE
     error_count = 1
 
@@ -98,12 +100,15 @@ def driver():
 # Fixture to navigate to the site before running tests
 @pytest.fixture
 def navigateToSite(driver):
-    driver.get("http://mytestingthoughts.com/Sample/home.html")  # URL of the sample site
+    driver.get(
+        "http://mytestingthoughts.com/Sample/home.html"
+    )  # URL of the sample site
 
 
 # Class to hold the form data values for retrieval
 class FormData:
     """Class to hold form data."""
+
     first_name = ""
     last_name = ""
     gender = ""
@@ -143,18 +148,27 @@ class FormLocators:
 def get_fields_value(driver):
     """Retrieve values from form fields."""
     # Retrieve text values from input fields
-    FormData.first_name = driver.find_element(*FormLocators.FIRST_NAME_FIELD).get_attribute("value")
-    FormData.last_name = driver.find_element(*FormLocators.LAST_NAME_FIELD).get_attribute("value")
+    FormData.first_name = driver.find_element(
+        *FormLocators.FIRST_NAME_FIELD
+    ).get_attribute("value")
+    FormData.last_name = driver.find_element(
+        *FormLocators.LAST_NAME_FIELD
+    ).get_attribute("value")
 
     # Retrieve gender from selected radio buttons
-    gender_male = driver.find_element(*FormLocators.Male_Radi_Button_Filed).is_selected()
-    gender_female = driver.find_element(*FormLocators.Female_Radi_Button_Filed).is_selected()
+    gender_male = driver.find_element(
+        *FormLocators.Male_Radi_Button_Filed
+    ).is_selected()
+    gender_female = driver.find_element(
+        *FormLocators.Female_Radi_Button_Filed
+    ).is_selected()
     FormData.gender = "Male" if gender_male else "Female" if gender_female else ""
 
     # Retrieve hobbies from multi-select dropdown
     hobbies_element = driver.find_element(*FormLocators.Hobbies_Field)
     FormData.selected_hobbies = [
-        option.text for option in hobbies_element.find_elements(*FormLocators.Hobbies_Field_Options)
+        option.text
+        for option in hobbies_element.find_elements(*FormLocators.Hobbies_Field_Options)
         if option.is_selected()
     ]
     if not FormData.selected_hobbies:
@@ -167,14 +181,26 @@ def get_fields_value(driver):
         FormData.department = None
 
     # Retrieve username and password values
-    FormData.username = driver.find_element(*FormLocators.Username_Field).get_attribute("value")
-    FormData.password = driver.find_element(*FormLocators.Password_Field).get_attribute("value")
-    FormData.confirm_password = driver.find_element(*FormLocators.Confirm_Password_Field).get_attribute("value")
+    FormData.username = driver.find_element(*FormLocators.Username_Field).get_attribute(
+        "value"
+    )
+    FormData.password = driver.find_element(*FormLocators.Password_Field).get_attribute(
+        "value"
+    )
+    FormData.confirm_password = driver.find_element(
+        *FormLocators.Confirm_Password_Field
+    ).get_attribute("value")
 
     # Retrieve email, contact number, and additional info
-    FormData.email = driver.find_element(*FormLocators.Email_Field).get_attribute("value")
-    FormData.contact_no = driver.find_element(*FormLocators.Contact_No_Field).get_attribute("value")
-    FormData.additional_info = driver.find_element(*FormLocators.Additional_Info_Field).get_attribute("value")
+    FormData.email = driver.find_element(*FormLocators.Email_Field).get_attribute(
+        "value"
+    )
+    FormData.contact_no = driver.find_element(
+        *FormLocators.Contact_No_Field
+    ).get_attribute("value")
+    FormData.additional_info = driver.find_element(
+        *FormLocators.Additional_Info_Field
+    ).get_attribute("value")
 
 
 # Test class for form submission test cases
@@ -185,18 +211,24 @@ class TestFormSubmission:
     def fill_form(driver):
         driver.find_element(*FormLocators.FIRST_NAME_FIELD).send_keys("Ahmed")
         driver.find_element(*FormLocators.LAST_NAME_FIELD).send_keys("Ahmed")
-        driver.find_element(*FormLocators.Male_Radi_Button_Filed).click()  # Selecting gender
+        driver.find_element(
+            *FormLocators.Male_Radi_Button_Filed
+        ).click()  # Selecting gender
         selector = Select(driver.find_element(*FormLocators.Hobbies_Field))
         selector.select_by_visible_text("Running")  # Selecting hobby
         selector = Select(driver.find_element(*FormLocators.Department_Field))
-        selector.select_by_visible_text("Department of Agriculture")  # Selecting department
+        selector.select_by_visible_text(
+            "Department of Agriculture"
+        )  # Selecting department
         driver.find_element(*FormLocators.Username_Field).send_keys("abdo1234")
         user_pass = "45454545"
         driver.find_element(*FormLocators.Password_Field).send_keys(user_pass)
         driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(user_pass)
         driver.find_element(*FormLocators.Email_Field).send_keys("joker@aaa.com")
         driver.find_element(*FormLocators.Contact_No_Field).send_keys("201015421458")
-        driver.find_element(*FormLocators.Additional_Info_Field).send_keys("I'm a SW Tester :)")
+        driver.find_element(*FormLocators.Additional_Info_Field).send_keys(
+            "I'm a SW Tester :)"
+        )
 
     # Method to validate the success message after submission
     @staticmethod
@@ -204,8 +236,12 @@ class TestFormSubmission:
         success_element = WebDriverWait(driver, 10).until(
             ec.presence_of_element_located((By.ID, "success_message"))
         )
-        assert "Success" in success_element.text, f"Expected 'Success' but got: '{success_element.text}'"
-        print(f"Form submitted successfully and '{success_element.text}' message validated.")
+        assert (
+            "Success" in success_element.text
+        ), f"Expected 'Success' but got: '{success_element.text}'"
+        print(
+            f"Form submitted successfully and '{success_element.text}' message validated."
+        )
         return success_element.text
 
     # Test case for form submission when the form is empty
@@ -236,7 +272,9 @@ class TestFormSubmission:
                 expected_result="Submit button is disabled",
                 platform="Web - Chrome",
             )
-            raise AssertionError("Form is empty but the submit button was enabled, test failed.")
+            raise AssertionError(
+                "Form is empty but the submit button was enabled, test failed."
+            )
         else:
             print("Test passed: Submit button is disabled as expected.")
 
@@ -293,8 +331,12 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
 
         # Verify if the validation error message is displayed for both fields
         if not (
-                driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[1]').is_displayed()
-                and driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[1]').is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[1]'
+            ).is_displayed()
+            and driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[1]'
+            ).is_displayed()
         ):
             # Log error if the single character is accepted
             log_error_to_csv(
@@ -318,10 +360,14 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
                 platform="Web - Chrome",
             )
             # Raise an assertion error if the test fails
-            raise AssertionError("The first and last name accepts a single character input, test failed.")
+            raise AssertionError(
+                "The first and last name accepts a single character input, test failed."
+            )
         else:
             # Print success message if the validation works
-            print("Test passed: The first and last name don't accept a single character input as expected.")
+            print(
+                "Test passed: The first and last name don't accept a single character input as expected."
+            )
 
     # Test case to verify that numbers are not accepted in first and last names
     def test_first_and_last_name_has_a_number(self, driver, navigateToSite):
@@ -331,8 +377,12 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
 
         # Verify if the validation error message is displayed for both fields
         if not (
-                driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[1]').is_displayed()
-                and driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[1]').is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[1]'
+            ).is_displayed()
+            and driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[1]'
+            ).is_displayed()
         ):
             # Get current form field values
             get_fields_value(driver)
@@ -358,10 +408,14 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
                 platform="Web - Chrome",
             )
             # Raise an assertion error if the test fails
-            raise AssertionError("The first and last name accept having a number, test failed.")
+            raise AssertionError(
+                "The first and last name accept having a number, test failed."
+            )
         else:
             # Print success message if the validation works
-            print("Test passed: The first and last name don't accept having a number as expected.")
+            print(
+                "Test passed: The first and last name don't accept having a number as expected."
+            )
 
     # Test case to verify the behavior when fields are cleared after being filled
     def test_first_and_last_name_clearing_after_filling(self, driver, navigateToSite):
@@ -381,17 +435,29 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
             last_name_field.send_keys(Keys.BACKSPACE)
 
         # Capture error messages displayed after clearing the fields
-        first_name_error_message = driver.find_element(By.XPATH, "/html/body/div/form/fieldset/div[1]/div/small[2]")
-        first_name_error_message_text = first_name_error_message.get_attribute("textContent").strip()
+        first_name_error_message = driver.find_element(
+            By.XPATH, "/html/body/div/form/fieldset/div[1]/div/small[2]"
+        )
+        first_name_error_message_text = first_name_error_message.get_attribute(
+            "textContent"
+        ).strip()
 
-        last_name_error_message = driver.find_element(By.CSS_SELECTOR,
-                                                      "#contact_form > fieldset > div:nth-child(4) > div > small:nth-child(3)")
-        last_name_error_message_text = last_name_error_message.get_attribute("textContent").strip()
+        last_name_error_message = driver.find_element(
+            By.CSS_SELECTOR,
+            "#contact_form > fieldset > div:nth-child(4) > div > small:nth-child(3)",
+        )
+        last_name_error_message_text = last_name_error_message.get_attribute(
+            "textContent"
+        ).strip()
 
         # Check if both error messages are displayed
         if not (
-                driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[2]').is_displayed()
-                and driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[2]').is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[2]'
+            ).is_displayed()
+            and driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[2]'
+            ).is_displayed()
         ):
             # Log the error if validation messages aren't shown
             log_error_to_csv(
@@ -416,11 +482,13 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
             )
             # Raise an assertion error if the test fails
             raise AssertionError(
-                f"The '{first_name_error_message_text}' and '{last_name_error_message_text}' error messages aren't displayed, test failed.")
+                f"The '{first_name_error_message_text}' and '{last_name_error_message_text}' error messages aren't displayed, test failed."
+            )
         else:
             # Print success message if the validation works
             print(
-                f"Test passed: The '{first_name_error_message_text}' and '{last_name_error_message_text}' error messages are displayed as expected.")
+                f"Test passed: The '{first_name_error_message_text}' and '{last_name_error_message_text}' error messages are displayed as expected."
+            )
 
     # Test case to verify that special characters are not accepted
     def test_first_and_last_name_with_special_characters(self, driver, navigateToSite):
@@ -433,8 +501,12 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
 
         # Verify if validation error messages are displayed
         if not (
-                driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[1]').is_displayed()
-                and driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[1]').is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[1]/div/small[1]'
+            ).is_displayed()
+            and driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[2]/div/small[1]'
+            ).is_displayed()
         ):
             # Log the error if special characters are accepted
             log_error_to_csv(
@@ -458,13 +530,19 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
                 platform="Web - Chrome",
             )
             # Raise an assertion error if the test fails
-            raise AssertionError("The first and last name accept having special characters, test failed.")
+            raise AssertionError(
+                "The first and last name accept having special characters, test failed."
+            )
         else:
             # Print success message if the validation works
-            print("Test passed: The first and last name don't accept having special characters as expected.")
+            print(
+                "Test passed: The first and last name don't accept having special characters as expected."
+            )
 
     # Test case to verify form submission with invalid first and last name inputs
-    def test_first_and_last_name_submit_form_with_invalid_data(self, driver, navigateToSite):
+    def test_first_and_last_name_submit_form_with_invalid_data(
+        self, driver, navigateToSite
+    ):
         # Fill in the first and last names with invalid data (too short)
         driver.find_element(*FormLocators.FIRST_NAME_FIELD).send_keys("A")
         driver.find_element(*FormLocators.LAST_NAME_FIELD).send_keys("H")
@@ -476,7 +554,9 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
         submit_button = driver.find_element(*FormLocators.Submit_Button)
         if not submit_button.is_enabled():
             # If the submit button is disabled, the test passes
-            print("Test passed: The form is not submitted with invalid first and last names.")
+            print(
+                "Test passed: The form is not submitted with invalid first and last names."
+            )
         else:
             # Log error if the form is submitted despite invalid data
             log_error_to_csv(
@@ -500,7 +580,9 @@ class TestFirstAndLastNameValidation:  # Mandatory field validation for first an
                 platform="Web - Chrome",
             )
             # Raise an assertion error if the test fails
-            raise AssertionError("The form accepts submitting invalid first and last names, test failed.")
+            raise AssertionError(
+                "The form accepts submitting invalid first and last names, test failed."
+            )
 
 
 # Class for gender radio button validation tests
@@ -513,8 +595,8 @@ class TestGenderRadioButtonValidation:  # Mandatory
 
         # Check if any gender radio button is pre-selected
         if (
-                driver.find_element(*FormLocators.Male_Radi_Button_Filed).is_selected()
-                or driver.find_element(*FormLocators.Female_Radi_Button_Filed).is_selected()
+            driver.find_element(*FormLocators.Male_Radi_Button_Filed).is_selected()
+            or driver.find_element(*FormLocators.Female_Radi_Button_Filed).is_selected()
         ):
             log_error_to_csv(
                 error_message="The Male/Female radio button is pre-selected when the page loads",
@@ -639,9 +721,7 @@ class TestGenderRadioButtonValidation:  # Mandatory
         get_fields_value(driver)
 
         # Check if the submit button is enabled (shouldn't be clickable without gender selection)
-        submit_button = driver.find_element(
-            *FormLocators.Submit_Button
-        )
+        submit_button = driver.find_element(*FormLocators.Submit_Button)
         if submit_button.is_enabled():
             log_error_to_csv(
                 error_message="The submit button is clickable when gender field is unselected",
@@ -718,7 +798,9 @@ class TestHobbiesFormGroupValidation:
             )
         else:
             # Print success message if no options are selected
-            print("Test passed: No options are selected when the page loads as expected.")
+            print(
+                "Test passed: No options are selected when the page loads as expected."
+            )
 
     # Test case to ensure multiple hobby options can be selected simultaneously
     def test_hobby_multiple_selection(self, driver, navigateToSite):
@@ -732,7 +814,9 @@ class TestHobbiesFormGroupValidation:
         get_fields_value(driver)
 
         # Verify if multiple selections are allowed
-        if not driver.find_element(By.XPATH, '//*[@id="exampleFormControlSelect2"]/option[4]').is_selected():
+        if not driver.find_element(
+            By.XPATH, '//*[@id="exampleFormControlSelect2"]/option[4]'
+        ).is_selected():
             # Log error if multiple selections aren't allowed
             log_error_to_csv(
                 error_message="Only one option can be selected at a time",
@@ -755,15 +839,21 @@ class TestHobbiesFormGroupValidation:
                 platform="Web - Chrome",
             )
             # Raise an error if the test fails
-            raise AssertionError("Only one option can be selected at a time, test failed.")
+            raise AssertionError(
+                "Only one option can be selected at a time, test failed."
+            )
         else:
             # Print success message if multiple selections are allowed
-            print("Test passed: More than one option can be selected at a time as expected.")
+            print(
+                "Test passed: More than one option can be selected at a time as expected."
+            )
 
     # Test case to validate that the selected hobby matches the one chosen by the user
     def test_hobby_selected_option_assertion(self, driver, navigateToSite):
         # Expected hobby to be selected
-        to_selected = driver.find_element(By.XPATH, '//*[@id="exampleFormControlSelect2"]/option[4]').text
+        to_selected = driver.find_element(
+            By.XPATH, '//*[@id="exampleFormControlSelect2"]/option[4]'
+        ).text
 
         # Select the hobby "Running"
         selector = Select(driver.find_element(*FormLocators.Hobbies_Field))
@@ -806,11 +896,13 @@ class TestHobbiesFormGroupValidation:
             )
             # Raise an error if the test fails
             raise AssertionError(
-                f"{to_selected} option was chosen but '{', '.join(selected_options)}' option is selected, test failed.")
+                f"{to_selected} option was chosen but '{', '.join(selected_options)}' option is selected, test failed."
+            )
         else:
             # Print success message if the selected option matches the chosen option
             print(
-                f"'{to_selected}' option was chosen and '{', '.join(selected_options)}' option is successfully selected as expected.")
+                f"'{to_selected}' option was chosen and '{', '.join(selected_options)}' option is successfully selected as expected."
+            )
 
     # Test case to verify that the form cannot be submitted if no hobby is selected
     def test_hobby_submit_form_without_hobby_selection(self, driver, navigateToSite):
@@ -847,10 +939,14 @@ class TestHobbiesFormGroupValidation:
                 platform="Web - Chrome",
             )
             # Raise an error if the test fails
-            raise AssertionError("The submit button is not clickable when hobby field is unselected, test failed.")
+            raise AssertionError(
+                "The submit button is not clickable when hobby field is unselected, test failed."
+            )
         else:
             # Print success message if the submit button is clickable as expected
-            print("Test passed: The submit button is not clickable when hobby field is unselected as expected.")
+            print(
+                "Test passed: The submit button is not clickable when hobby field is unselected as expected."
+            )
 
 
 # Class for validating department dropdown functionality
@@ -921,7 +1017,7 @@ class TestDepartmentDropDownValidation:
 
         # Verify if multiple selections are allowed by checking the second option
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[5]/div/div/select/option[2]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[5]/div/div/select/option[2]'
         ).is_selected():
             # Log error if more than one option can be selected
             log_error_to_csv(
@@ -1021,9 +1117,7 @@ class TestDepartmentDropDownValidation:
         get_fields_value(driver)
 
         # Verify if the submit button is enabled
-        submit_button = driver.find_element(
-            *FormLocators.Submit_Button
-        )
+        submit_button = driver.find_element(*FormLocators.Submit_Button)
         if submit_button.is_enabled():
             # Log error if the submit button is clickable when department field is unselected
             log_error_to_csv(
@@ -1070,9 +1164,9 @@ class TestUsernameValidation:
 
         # Verify if the validation error message is displayed
         if not (
-                driver.find_element(
-                    By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
-                ).is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
+            ).is_displayed()
         ):
             # Log error if the single character is accepted
             log_error_to_csv(
@@ -1115,9 +1209,9 @@ class TestUsernameValidation:
 
         # Verify if the validation error message is displayed
         if not (
-                driver.find_element(
-                    By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
-                ).is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
+            ).is_displayed()
         ):
             # Log error if the short username is accepted
             log_error_to_csv(
@@ -1162,9 +1256,9 @@ class TestUsernameValidation:
 
         # Verify if the validation error message is displayed
         if not (
-                driver.find_element(
-                    By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
-                ).is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
+            ).is_displayed()
         ):
             # Log error if the long username is accepted
             log_error_to_csv(
@@ -1207,9 +1301,9 @@ class TestUsernameValidation:
 
         # Verify if the validation error message is displayed
         if not (
-                driver.find_element(
-                    By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
-                ).is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
+            ).is_displayed()
         ):
             # Log error if the username starting with a number is accepted
             log_error_to_csv(
@@ -1252,7 +1346,7 @@ class TestUsernameValidation:
 
         # Verify if the validation error message is not displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
         ).is_displayed():
             # Log error if the username with underscore is not accepted
             log_error_to_csv(
@@ -1285,7 +1379,9 @@ class TestUsernameValidation:
             print("Test passed: The username accepts having an underscore as expected.")
 
     # Test case to verify that the username doesn't accept special characters other than underscore
-    def test_username_having_a_special_char_other_than_underscore(self, driver, navigateToSite):
+    def test_username_having_a_special_char_other_than_underscore(
+        self, driver, navigateToSite
+    ):
         # Enter a username with a special character other than underscore
         driver.find_element(*FormLocators.Username_Field).send_keys("_ahmed&12")
 
@@ -1293,7 +1389,11 @@ class TestUsernameValidation:
         get_fields_value(driver)
 
         # Check if the error message is displayed
-        if not (driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]').is_displayed()):
+        if not (
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[1]'
+            ).is_displayed()
+        ):
             # Log error if the username accepts a special character other than underscore
             log_error_to_csv(
                 error_message="The username accepts having a special character other than an underscore",
@@ -1340,11 +1440,17 @@ class TestUsernameValidation:
             username_field.send_keys(Keys.BACKSPACE)
 
         # Get the error message text
-        error_message = driver.find_element(By.XPATH, "/html/body/div/form/fieldset/div[6]/div/small[2]")
+        error_message = driver.find_element(
+            By.XPATH, "/html/body/div/form/fieldset/div[6]/div/small[2]"
+        )
         error_message_text = error_message.get_attribute("textContent").strip()
 
         # Check if the error message is displayed
-        if not (driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[2]').is_displayed()):
+        if not (
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[6]/div/small[2]'
+            ).is_displayed()
+        ):
             # Log error if the error message isn't displayed
             log_error_to_csv(
                 error_message=f"The '{error_message_text}' error message isn't displayed",
@@ -1428,15 +1534,17 @@ class TestPasswordValidation:
     def test_password_matching(self, driver, navigateToSite):
         # Enter matching passwords in both fields
         driver.find_element(*FormLocators.Password_Field).send_keys("Password123")
-        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys("Password123")
+        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(
+            "Password123"
+        )
 
         # Capture form field values
         get_fields_value(driver)
 
         # Check if the confirmation message is displayed
         if driver.find_element(
-                By.CSS_SELECTOR,
-                "#contact_form > fieldset > div:nth-child(10) > div > div > i",
+            By.CSS_SELECTOR,
+            "#contact_form > fieldset > div:nth-child(10) > div > div > i",
         ).is_displayed():
             print("Test passed: Matching passwords confirmed as expected.")
         else:
@@ -1471,15 +1579,17 @@ class TestPasswordValidation:
     def test_password_non_matching(self, driver, navigateToSite):
         # Enter non-matching passwords
         driver.find_element(*FormLocators.Password_Field).send_keys("Password123")
-        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys("Password321")
+        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(
+            "Password321"
+        )
 
         # Capture form field values
         get_fields_value(driver)
 
         # Check if the error message is displayed for non-matching passwords
         if driver.find_element(
-                By.CSS_SELECTOR,
-                "#contact_form > fieldset > div:nth-child(10) > div > div > i",
+            By.CSS_SELECTOR,
+            "#contact_form > fieldset > div:nth-child(10) > div > div > i",
         ).is_displayed():
             # Log error if no error message is displayed for non-matching passwords
             log_error_to_csv(
@@ -1522,7 +1632,7 @@ class TestPasswordValidation:
 
         # Check if the error message for minimum length is displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[7]/div/small[1]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[7]/div/small[1]'
         ).is_displayed():
             print(
                 "Test passed: Minimum length requirement error message is displayed as expected."
@@ -1566,7 +1676,7 @@ class TestPasswordValidation:
 
         # Check if the error message for maximum length is displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[7]/div/small[1]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[7]/div/small[1]'
         ).is_displayed():
             print(
                 "Test passed: Maximum length requirement error message is displayed as expected."
@@ -1659,7 +1769,9 @@ class TestPasswordValidation:
         # Fill in password fields
         password_field = driver.find_element(*FormLocators.Password_Field)
         password_field.send_keys("Password123")
-        confirm_password_field = driver.find_element(*FormLocators.Confirm_Password_Field)
+        confirm_password_field = driver.find_element(
+            *FormLocators.Confirm_Password_Field
+        )
         confirm_password_field.send_keys("Password123")
 
         # Clear password fields
@@ -1677,17 +1789,24 @@ class TestPasswordValidation:
         )
 
         # Get error message texts
-        password_error_message_text = password_error_message.get_attribute("textContent").strip()
-        confirm_password_error_message_text = confirm_password_error_message.get_attribute("textContent").strip()
+        password_error_message_text = password_error_message.get_attribute(
+            "textContent"
+        ).strip()
+        confirm_password_error_message_text = (
+            confirm_password_error_message.get_attribute("textContent").strip()
+        )
 
         # Capture form field values
         get_fields_value(driver)
 
         # Check if both error messages are displayed
         if not (
-                driver.find_element(By.XPATH, '//*[@id="contact_form"]/fieldset/div[7]/div/small[2]').is_displayed()
-                and driver.find_element(By.XPATH,
-                                        '//*[@id="contact_form"]/fieldset/div[8]/div/small[2]').is_displayed()
+            driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[7]/div/small[2]'
+            ).is_displayed()
+            and driver.find_element(
+                By.XPATH, '//*[@id="contact_form"]/fieldset/div[8]/div/small[2]'
+            ).is_displayed()
         ):
             # Log error if error messages are not displayed
             log_error_to_csv(
@@ -1723,15 +1842,21 @@ class TestPasswordValidation:
     # Test case to verify password input masking
     def test_password_input_masking(self, driver, navigateToSite):
         # Get the current field types
-        password_field_type = driver.find_element(*FormLocators.Password_Field).get_attribute("type")
-        confirm_password_field_type = driver.find_element(*FormLocators.Confirm_Password_Field).get_attribute(
-            "type")
+        password_field_type = driver.find_element(
+            *FormLocators.Password_Field
+        ).get_attribute("type")
+        confirm_password_field_type = driver.find_element(
+            *FormLocators.Confirm_Password_Field
+        ).get_attribute("type")
 
         # Get current form field values
         get_fields_value(driver)
 
         # Check if both password fields are of type "password"
-        if password_field_type == "password" and confirm_password_field_type == "password":
+        if (
+            password_field_type == "password"
+            and confirm_password_field_type == "password"
+        ):
             print("Test passed: Password fields are masked correctly.")
         else:
             # Log error if password fields are not masked
@@ -1825,7 +1950,9 @@ class TestEmailValidation:
         driver.find_element(*FormLocators.Username_Field).send_keys("abdo1234")
         user_password = "45454545"
         driver.find_element(*FormLocators.Password_Field).send_keys(user_password)
-        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(user_password)
+        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(
+            user_password
+        )
 
         # Leave email field empty
         driver.find_element(*FormLocators.Email_Field).send_keys("")
@@ -1877,7 +2004,7 @@ class TestEmailValidation:
 
         # Check if error message for invalid email format is displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[2]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[2]'
         ).is_displayed():
             print(
                 "Test passed: Invalid email format error message is displayed as expected."
@@ -1920,7 +2047,7 @@ class TestEmailValidation:
 
         # Check if no error message is displayed for valid email
         if not driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[2]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[2]'
         ).is_displayed():
             print("Test passed: Valid email is accepted as expected.")
         else:
@@ -1952,7 +2079,9 @@ class TestEmailValidation:
     # Test case to verify correct input type for email field
     def test_email_input_type(self, driver, navigateToSite):
         # Get the input type of the email field
-        email_field_type = driver.find_element(*FormLocators.Email_Field).get_attribute("type")
+        email_field_type = driver.find_element(*FormLocators.Email_Field).get_attribute(
+            "type"
+        )
 
         # Capture form field values
         get_fields_value(driver)
@@ -2007,11 +2136,13 @@ class TestEmailValidation:
         email_error_message = driver.find_element(
             By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[1]'
         )
-        email_error_message_text = email_error_message.get_attribute("textContent").strip()
+        email_error_message_text = email_error_message.get_attribute(
+            "textContent"
+        ).strip()
 
         # Check if the error message is displayed
         if not driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[1]'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[9]/div/small[1]'
         ).is_displayed():
             # Log error if error message is not displayed
             log_error_to_csv(
@@ -2061,7 +2192,9 @@ class TestContactNumberValidation:
         driver.find_element(*FormLocators.Username_Field).send_keys("abdo1234")
         user_password = "45454545"
         driver.find_element(*FormLocators.Password_Field).send_keys(user_password)
-        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(user_password)
+        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(
+            user_password
+        )
         driver.find_element(*FormLocators.Email_Field).send_keys("test@example.com")
 
         # Leave contact number field empty
@@ -2114,7 +2247,7 @@ class TestContactNumberValidation:
 
         # Check if error message for invalid contact number format is displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
         ).is_displayed():
             print(
                 "Test passed: Invalid contact number format error message is displayed as expected."
@@ -2157,7 +2290,7 @@ class TestContactNumberValidation:
 
         # Check if no error message is displayed for valid contact number
         if not driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
         ).is_displayed():
             print("Test passed: Valid contact number is accepted as expected.")
         else:
@@ -2189,7 +2322,9 @@ class TestContactNumberValidation:
     # Test case to verify correct input type for contact number field
     def test_contact_number_input_type(self, driver, navigateToSite):
         # Get the input type of the contact number field
-        contact_no_field_type = driver.find_element(*FormLocators.Contact_No_Field).get_attribute("type")
+        contact_no_field_type = driver.find_element(
+            *FormLocators.Contact_No_Field
+        ).get_attribute("type")
 
         # Capture form field values
         get_fields_value(driver)
@@ -2243,8 +2378,8 @@ class TestContactNumberValidation:
         # Check if the error message is displayed
         contact_no_error_message_text = "Please enter your Contact No."
         if driver.find_element(
-                By.CSS_SELECTOR,
-                "#contact_form > fieldset > div.form-group.has-feedback.has-success > div > div > i",
+            By.CSS_SELECTOR,
+            "#contact_form > fieldset > div.form-group.has-feedback.has-success > div > div > i",
         ).is_displayed():
             # Log error if error message is not displayed
             log_error_to_csv(
@@ -2290,7 +2425,7 @@ class TestContactNumberValidation:
 
         # Check if error message for minimum length is displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
         ).is_displayed():
             print(
                 f"Test passed: '{error_message}' error message is displayed for contact number shorter than 12 characters as expected."
@@ -2336,7 +2471,7 @@ class TestContactNumberValidation:
 
         # Check if error message for maximum length is displayed
         if driver.find_element(
-                By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
+            By.XPATH, '//*[@id="contact_form"]/fieldset/div[10]/div/small'
         ).is_displayed():
             print(
                 f"Test passed: '{error_message}' error message is displayed for contact number longer than 12 characters as expected."
@@ -2377,7 +2512,9 @@ class TestAdditionalInfoField:
     def test_additional_info_minimum_length(self, driver, navigateToSite):
         # Locate the Additional Info field and enter a single character
         additional_info_field = driver.find_element(*FormLocators.Additional_Info_Field)
-        additional_info_field.send_keys("A")  # Assuming 'A' is the minimum character for the field
+        additional_info_field.send_keys(
+            "A"
+        )  # Assuming 'A' is the minimum character for the field
 
         # Get field values after filling the form
         get_fields_value(driver)
@@ -2448,7 +2585,9 @@ class TestAdditionalInfoField:
             )
 
             # Raise an error if the test fails
-            raise AssertionError("Maximum length restriction is not enforced, test failed.")
+            raise AssertionError(
+                "Maximum length restriction is not enforced, test failed."
+            )
 
     # Test case to verify form submission with an empty Additional Info field
     def test_additional_info_empty_field_submission(self, driver, navigateToSite):
@@ -2463,7 +2602,9 @@ class TestAdditionalInfoField:
         driver.find_element(*FormLocators.Username_Field).send_keys("abdo1234")
         user_password = "45454545"
         driver.find_element(*FormLocators.Password_Field).send_keys(user_password)
-        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(user_password)
+        driver.find_element(*FormLocators.Confirm_Password_Field).send_keys(
+            user_password
+        )
         driver.find_element(*FormLocators.Email_Field).send_keys("joker@aaa.com")
         driver.find_element(*FormLocators.Contact_No_Field).send_keys("201015421458")
 
@@ -2477,7 +2618,9 @@ class TestAdditionalInfoField:
         submit_button = driver.find_element(*FormLocators.Submit_Button)
 
         if submit_button.is_enabled():
-            print("Test passed: Submit button is enabled when Additional Info. field is empty as expected.")
+            print(
+                "Test passed: Submit button is enabled when Additional Info. field is empty as expected."
+            )
         else:
             # Log error if submit button is disabled
             log_error_to_csv(
@@ -2502,7 +2645,9 @@ class TestAdditionalInfoField:
             )
 
             # Raise an error if the test fails
-            raise AssertionError("Submit button is disabled when Additional Info. field is empty, test failed.")
+            raise AssertionError(
+                "Submit button is disabled when Additional Info. field is empty, test failed."
+            )
 
     # Test case to verify input format acceptance in the Additional Info field
     def test_additional_info_input_format(self, driver, navigateToSite):
@@ -2583,7 +2728,9 @@ class TestAdditionalInfoField:
             )
 
             # Raise an error if the test fails
-            raise AssertionError("Copy-paste functionality is not working, test failed.")
+            raise AssertionError(
+                "Copy-paste functionality is not working, test failed."
+            )
 
     # Test case to verify input truncation in the Additional Info field
     def test_additional_info_truncation(self, driver, navigateToSite):
@@ -2596,7 +2743,9 @@ class TestAdditionalInfoField:
 
         # Verify that the input is truncated to 500 characters
         if len(additional_info_field.get_attribute("value")) == 500:
-            print("Test passed: Input is truncated correctly after reaching max length as expected.")
+            print(
+                "Test passed: Input is truncated correctly after reaching max length as expected."
+            )
         else:
             # Log error if truncation is not enforced
             log_error_to_csv(
@@ -2630,7 +2779,9 @@ class TestAdditionalInfoField:
         additional_info_field.send_keys(long_text)
 
         # Simulate resizing the field
-        driver.execute_script("arguments[0].style.height = '500px';", additional_info_field)
+        driver.execute_script(
+            "arguments[0].style.height = '500px';", additional_info_field
+        )
 
         # Get field values after filling the form
         get_fields_value(driver)
