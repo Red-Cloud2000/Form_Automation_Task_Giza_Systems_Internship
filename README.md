@@ -6,8 +6,8 @@ This repository contains the automation scripts developed as part of the Form Au
 ## Table of Contents
 - [📄 Overview](#-overview)
 - [✨ Features](#-features)
-- [🔧 Installation](#installation)
-  - [Prerequisites](#-prerequisites)
+- [🔧 Installation](#-installation)
+  - [Prerequisites](#prerequisites)
   - [Setup](#setup)
 - [Usage](#usage)
 - [Contributing](#contributing)
